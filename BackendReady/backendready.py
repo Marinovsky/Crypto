@@ -99,7 +99,8 @@ Understanding a<->0, b<->1, ..., z<->25 the codification method transforms each 
 The codification method adds the key value to each number and transforms the result back to an alphabetical value.
 Then returns the message encrypted
   """
-
+  if type(key) != int:
+    return -1, -1
 
   palabrals = unify(palabrast)
   if count_falla > 2:
@@ -109,16 +110,16 @@ Then returns the message encrypted
       palabrals[i] = (palabrals[i] + key)%26
     palabrast = deconvert(palabrals)
     print(palabrast)
-    return palabrast
+    return palabrast, key
   if 1 <= key <= 26:
       palabrals = convert(palabrals)
       for i in range(len(palabrals)):
         palabrals[i] = (palabrals[i] + key)%26
       palabrast = deconvert(palabrals)
       print(palabrast)
-      return palabrast
+      return palabrast, key
   else:
-    return -1
+    return -1, -1
   
 
 ####LIMPIO
