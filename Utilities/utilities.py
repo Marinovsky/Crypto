@@ -3,8 +3,9 @@ from math import gcd as bltin_gcd
 import re
 
 #///////////////////////////////////////////////////////////////
-#//////////////////////FUNCIONES GENERALES///////////////////
+#//////////////////////FUNCIONES UTILES///////////////////
 #////////////////////////////////////////////////////////////////
+
 def rela_primes():
   lista = []
   for i in range(26): 
@@ -27,12 +28,6 @@ def inver_primes():
  
 ## agregar ignorar lo que no sean letras y pasar las mayus a minus 
 
-#def unify(palabra):
-#  palabralist = []
-#  palabra = palabra.replace(" ", "")
-#  for i in range(len(palabra)):
-#    palabralist.append(palabra[i])
-#  return palabralist
 def unify(palabra):
   palabralist = []
   palabra = palabra.replace(" ", "")
