@@ -264,6 +264,7 @@ Then returns the message encrypted
 ####mbwjebftnvzmjoeb
 ####xmhupmqegzmoaeufmxuzpm (12)
 def decode_despla(string, key, count_fallas):
+  
   if 1<= key<=26:
     lista = unify(string)
     lista = convert(lista)
