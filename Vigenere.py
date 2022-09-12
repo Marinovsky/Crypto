@@ -23,18 +23,19 @@ def GetKey(keyword):
     if type(keyword) == list:
         return keyword
     else:
-        keyword = keyword.lower()
         key = []
         for c in keyword:
             key.append(utils.GetCode(c))
         
         return key
 
-def Encrypt(keyword, text):
+def Encrypt(keyword, text, failures):
     """
     Description
     -----------
-    This functions encrypts the given text with the provided keyword of length m
+    This functions encrypts the given text with the provided keyword. If the
+    given keyword is not valid it returns -1. After three tries, the keyword
+    is selected randomly
 
     Parameters
     ----------
@@ -42,16 +43,29 @@ def Encrypt(keyword, text):
         The keyword to encrypt
     text : string
         Text to encrypt with Vigenere Cipher
+    failures : 
+        Number of times the user has entered and invalid keyword
+
+    Returns
+    -------
+    string, string : The first string is the text encrypted and the second one
+    is the keyword used
     """
-    m = len(keyword)
+    if failures == 3:
+        keyword = utils.GetRandomString(utils.GetRandomInteger(len(text)))
+    elif len(utils.preProcessText(keyword)) == 0:
+        return -1
+    
     text = utils.preProcessText(text)
+    keyword = utils.preProcessText(keyword)
     key = GetKey(keyword)
+    m = len(key)
 
     encryptedText = ""
     for i in range(0, len(text)):
         encryptedText += utils.GetLetter((utils.GetCode(text[i]) + (key[i % m])) % 26)
     
-    return encryptedText
+    return encryptedText, keyword
 
 def Decrypt(keyword, text):
     """
@@ -65,8 +79,16 @@ def Decrypt(keyword, text):
         The keyword to encrypt
     text : string
         Text to decrypt with Vigenere Cipher
+    
+    Returns
+    -------
+    string : The decrypted text using the given keyword
     """
+    if len(utils.preProcessText(keyword)) == 0:
+        return -1
+    
     m = len(keyword)
+    keyword = utils.preProcessText(keyword)
     key = GetKey(keyword)
 
     decryptedText = ""
@@ -77,6 +99,6 @@ def Decrypt(keyword, text):
 
 """
 EXAMPLE
-print(Encrypt("CIPHER", "This Cryptosystem is not secure"))
+print(Encrypt("CIPHER", "This Cryptosystem is not secure", 0))
 print(Decrypt("CIPHER", "vpxzgiaxivwpubttmjpwizitwzt"))
 """
