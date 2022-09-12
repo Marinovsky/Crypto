@@ -99,28 +99,28 @@ Understanding a<->0, b<->1, ..., z<->25 the codification method transforms each 
 The codification method adds the key value to each number and transforms the result back to an alphabetical value.
 Then returns the message encrypted
   """
-  if type(key) != int:
-    return -1, -1
-
-  palabrals = unify(palabrast)
-  if count_falla > 2:
-    key = ran.randint(1,26)
-    palabrals = convert(palabrals)
-    for i in range(len(palabrals)):
-      palabrals[i] = (palabrals[i] + key)%26
-    palabrast = deconvert(palabrals)
-    print(palabrast)
-    return palabrast, key
-  if 1 <= key <= 26:
+  try:
+    key = int(key)
+    palabrals = unify(palabrast)
+    if count_falla > 2:
+      key = ran.randint(1,26)
       palabrals = convert(palabrals)
       for i in range(len(palabrals)):
         palabrals[i] = (palabrals[i] + key)%26
       palabrast = deconvert(palabrals)
       print(palabrast)
       return palabrast, key
-  else:
-    return -1, -1
-  
+    if 1 <= key <= 26:
+        palabrals = convert(palabrals)
+        for i in range(len(palabrals)):
+          palabrals[i] = (palabrals[i] + key)%26
+        palabrast = deconvert(palabrals)
+        print(palabrast)
+        return palabrast, key
+    else:
+      return -1, -1
+  except:
+    return -1,-1
 
 ####LIMPIO
 def encode_mult(palabrast,key,count_falla):
@@ -133,26 +133,27 @@ Understanding a<->0, b<->1, ..., z<->25 the codification method transforms each 
 The codification method adds the key value to each number and transforms the result back to an alphabetical value.
 Then returns the message encrypted
   """
-
-
-  palabrals = unify(palabrast)
-  claves_validas = rela_primes()
-  if count_falla > 2:
-    key = claves_validas[ran.randint(1,len(claves_validas))]
-    palabrals = convert(palabrals)
-    for i in range(len(palabrals)):
-      palabrals[i] = (palabrals[i] * key)%26
-    palabrast = deconvert(palabrals)
-    return palabrast
-  if key in claves_validas:
+  try:
+    key = int(key)
+    palabrals = unify(palabrast)
+    claves_validas = rela_primes()
+    if count_falla > 2:
+      key = claves_validas[ran.randint(1,len(claves_validas))]
       palabrals = convert(palabrals)
       for i in range(len(palabrals)):
         palabrals[i] = (palabrals[i] * key)%26
       palabrast = deconvert(palabrals)
-      return palabrast
-  else:
-    return -1
-
+      return palabrast, key
+    if key in claves_validas:
+        palabrals = convert(palabrals)
+        for i in range(len(palabrals)):
+          palabrals[i] = (palabrals[i] * key)%26
+        palabrast = deconvert(palabrals)
+        return palabrast, key
+    else:
+      return -1,-1
+  except:
+    return -1,-1
 ###### LIMPIO
 def encode_sust(palabrast,key,count_falla):
   """
@@ -163,32 +164,34 @@ If the user fails 3 times providing a valid key, the program chooses randomly a 
 The codification method substitutes each letter by its replacement as stated in the key.
 Then returns the message encrypted
   """
-
-  dic = {'a':"", 'b':"", 'c':"", 'd':"", 'e':"", 'f':"", 'g':"", 'h':"", 'i':"", 'j':"", 'k':"", 'l':"",'m':"", 'n':"", 'o':"", 'p':"", 'q':"", 'r':"", 's':"", 't':"", 'u':"", 'v':"", 'w':"", 'x':"", 'y':"", 'z':""}
-  lista = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-  palabrals = unify(palabrast)
-  count = 0
-  if count_falla > 2:
-    listaran = lista[:]
-    ran.shuffle(listaran)
-    for item in listaran:
-      if item not in dic.values():
-        dic[lista[count]] = item
-  for item in key:
-    if item not in lista:
-      return -1
-    else:
-      if item not in dic.values():
-        dic[lista[count]] = item
-        count = count + 1
+  try:
+    key = int(key)
+    dic = {'a':"", 'b':"", 'c':"", 'd':"", 'e':"", 'f':"", 'g':"", 'h':"", 'i':"", 'j':"", 'k':"", 'l':"",'m':"", 'n':"", 'o':"", 'p':"", 'q':"", 'r':"", 's':"", 't':"", 'u':"", 'v':"", 'w':"", 'x':"", 'y':"", 'z':""}
+    lista = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    palabrals = unify(palabrast)
+    count = 0
+    if count_falla > 2:
+      listaran = lista[:]
+      ran.shuffle(listaran)
+      for item in listaran:
+        if item not in dic.values():
+          dic[lista[count]] = item
+    for item in key:
+      if item not in lista:
+        return -1, -1
       else:
-        return -1  
-  string = ""
-  for i in range(len(palabrals)):
-    palabrals[i] = dic[palabrals[i]]
-    string = string + palabrals[i]
-  return string
-
+        if item not in dic.values():
+          dic[lista[count]] = item
+          count = count + 1
+        else:
+          return -1, -1 
+    string = ""
+    for i in range(len(palabrals)):
+      palabrals[i] = dic[palabrals[i]]
+      string = string + palabrals[i]
+    return string, key
+  except:
+    return -1,-1
 
 ####LIMPIO
 def encode_afin(palabrast, a, b, count_falla):
@@ -201,28 +204,33 @@ Understanding a<->0, b<->1, ..., z<->25 the codification method transforms each 
 The codification method multiplies a and ads b to each number and transforms the result back to an alphabetical value.
 Then returns the message encrypted
   """
-
-  palabrals = unify(palabrast)
-  claves_validas = rela_primes()
-  if count_falla > 2:
-    a = claves_validas[ran.randint(1,len(claves_validas))]
-    b = ran.randint(1,25)
-    palabrals = convert(palabrals)
-    for i in range(len(palabrals)):
-      palabrals[i] = (((palabrals[i] * a)%26)+b)%26
-    palabrast = deconvert(palabrals)
-    return palabrast
-  if a in claves_validas:
-    if 1 <= b <= 25:
+  try:
+    a = int(a)
+    b = int(b)
+    palabrals = unify(palabrast)
+    claves_validas = rela_primes()
+    if count_falla > 2:
+      a = claves_validas[ran.randint(1,len(claves_validas))]
+      b = ran.randint(1,25)
       palabrals = convert(palabrals)
       for i in range(len(palabrals)):
         palabrals[i] = (((palabrals[i] * a)%26)+b)%26
       palabrast = deconvert(palabrals)
-      return palabrast
+      return palabrast, a, b
+    if a in claves_validas:
+      if 1 <= b <= 25:
+        palabrals = convert(palabrals)
+        for i in range(len(palabrals)):
+          palabrals[i] = (((palabrals[i] * a)%26)+b)%26
+        palabrast = deconvert(palabrals)
+        return palabrast, a, b
+      else:
+        return -1, -1
     else:
-      return -1 
-  else:
-    return -1
+      return -1,-1
+  except:
+    return -1,-1
+
 
 ####LIMPIO
 def encode_permu(string, tama, key, count_falla):
@@ -234,30 +242,34 @@ If the user fails 3 times providing a valid key, the program chooses randomly a 
 The codification method takes chunks of size a and moves each letter b spaces to the right, if the letter is in the last position of the chunk, it goes back to the first.
 Then returns the message encrypted
   """
-
-  palabrals = unify(string)
-  while True:
-    if 1 <= tama <=len(palabrals):
-      break
-    return -1
-  while True:
-    if 1<= key < tama:
-      break
-    return -1
-  chunks = [palabrals[x:x+tama] for x in range(0, len(palabrals), tama)]
-  final=[]
-  for x in chunks:
-    test = []
-    for i in range(key):
-      test.append(x[(len(x)-(key-i))%len(x)])
-      if(i>=len(x)-1):
+  try:
+    tama=int(tama)
+    key=int(key)
+    palabrals = unify(string)
+    while True:
+      if 1 <= tama <=len(palabrals):
         break
-    for i in range(len(x)-key):
-      test.append(x[i])
-    final.extend(test)
-  final = convert(final)
-  final = deconvert(final)
-  return final
+      return -1, -1
+    while True:
+      if 1<= key < tama:
+        break
+      return -1, -1
+    chunks = [palabrals[x:x+tama] for x in range(0, len(palabrals), tama)]
+    final=[]
+    for x in chunks:
+      test = []
+      for i in range(key):
+        test.append(x[(len(x)-(key-i))%len(x)])
+        if(i>=len(x)-1):
+          break
+      for i in range(len(x)-key):
+        test.append(x[i])
+      final.extend(test)
+    final = convert(final)
+    final = deconvert(final)
+    return final, tama, key
+  except:
+    return -1,-1,-1
 #///////////////////////////////////////////////////////////////
 #//////////////////////METODOS DE DECODIFICACION///////////////////
 #////////////////////////////////////////////////////////////////
