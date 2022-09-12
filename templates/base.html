@@ -1,0 +1,57 @@
+{% load static %}
+
+<!DOCTYPE HTML>
+<html>
+    <head>    
+		<title>CRYPTOVERSE</title>
+        <link rel="shortcut icon" href="#">
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <link rel="stylesheet"  href="{% static 'css/main.css' %}">
+        <link rel="stylesheet"  href="{% static 'css/style.css' %}">
+		<noscript><link rel="stylesheet" href="{% static 'css/noscript.css' %}" /></noscript>
+          
+          
+    </head>
+    <body class="is-preload">
+        <div id="wrapper">
+
+            <!-- Header -->
+                <header id="header" class="alt">
+                    <a href="/" class="logo"><strong>CRYPTOVERSE</strong></a>
+                    <!-- <span class="image">
+                        <img src="{% static 'images/icon0.5x.jpg" alt="" />
+                    </span> -->
+                    <nav>
+                        <a href="#menu">Menu</a>
+                    </nav>
+                </header>
+
+            <!-- Menu -->
+                <nav id="menu">
+                    <ul class="links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/CS/Shift">Shift cypher</a></li>
+                        <li><a href="/CS/Multiplication">Multiplication cypher</a></li>
+                        <li><a href="/CS/Substitution">Substitution cypher</a></li>
+                        <li><a href="/CS/Affine">Affine cypher</a></li>
+                        <li><a href="/CS/Permutation">Permutation cypher</a></li>
+                        <li><a href="/CS/Hill">Hill cypher</a></li>
+                        <li><a href="/CS/Vigenere">Vigenere cypher</a></li>
+                    </ul>
+                </nav>
+        </div>
+        
+        {% block content %}
+        {%endblock content%}
+        
+		<!-- Scripts -->
+			<script src="{% static 'js/jquery.min.js' %}"></script>
+			<script src="{% static 'js/jquery.scrolly.min.js' %}"></script>
+			<script src="{% static 'js/jquery.scrollex.min.js' %}"></script>
+			<script src="{% static 'js/browser.min.js' %}"></script>
+			<script src="{% static 'js/breakpoints.min.js' %}"></script>
+			<script src="{% static 'js/util.js' %}"></script>
+			<script src="{% static 'js/main.js' %}"></script>
+    </body>
+</html>
