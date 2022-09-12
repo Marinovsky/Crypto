@@ -1,0 +1,85 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="cypher-title">
+    <h1>SHIFT CYPHER</h1>
+</div>
+
+<section id="ende">
+    <div class="inner">
+        <section id="encrypt">
+            <form action="." method="post">
+                <h2>Encrypt</h2>
+                {% csrf_token %}
+                {% if not encrypted %}
+                    
+                {% if mistake%}
+                <label> {{countfail}} mistakes</label>
+                {% endif %}
+                <div class="fields">
+                    <div class="field">
+                        <label for="key">Key (between 1 and 25):</label>
+                        <input type="text" id="key" name="key">
+                    </div>
+                    <div class="field" >
+                        <label for="cleartext">Text to encrypt:</label><br>
+                        <textarea name="cleartext"></textarea>
+                    </div>
+                </div>
+                <ul class="actions">
+                    <li><input type="submit" value="Encrypt" class="primary" /></li>
+                    <li><input type="reset" value="Clear" /></li>
+                </ul>
+
+                {% endif %}
+            </form>
+            <div>          
+                {% if encrypted %}
+                <div >
+                    <label>Used key:  </label>
+                    <p>{{key}}</p>
+                </div>
+                <div >
+                    <label>Encoded text:</label>
+                    <p>{{encodedtext}}</p>
+                </div>
+                
+                <ul class="actions">
+                    <form action="." method="get">
+                        <button  type="submit" name="encrypt_again" value="encrypt">Encrypt again</button>
+                    </form>
+
+                </ul>
+
+                {% endif %}
+            </div>
+        </section>
+       
+        <section id="decrypt">
+            <form action="." method="post">
+                <h2>Decrypt</h2>
+                {% csrf_token %}
+                <div class="fields">
+                    <div class="field ">
+                        <label for="key">Key (between 1 and 25):</label>
+                        <input type="text" id="key" name="key">
+                    </div>
+                    <div class="field" >
+                        <label for="ciphertext">Text to decrypt:</label><br>
+                        <textarea name="ciphertext"></textarea>
+                    </div>
+                </div>
+                <ul class="actions">
+                    <li><input type="submit" value="Decrypt" class="primary" /></li>
+                    <li><input type="reset" value="Clear" /></li>
+                    <li><input type="submit" value="I don't know the key" class="primary" /></li>
+                </ul>
+            </form>
+        </section>
+    </div>
+</section>
+
+{% endblock content %}
