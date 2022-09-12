@@ -1,74 +1,7 @@
 import random as ran
 from math import gcd as bltin_gcd
 import re
-
-
-
-#///////////////////////////////////////////////////////////////
-#//////////////////////FUNCIONES GENERALES///////////////////
-#////////////////////////////////////////////////////////////////
-def rela_primes():
-  lista = []
-  for i in range(26): 
-    if bltin_gcd(26, i) == 1:
-      lista.append(i)
-  return lista 
-
-
-
-def inver_primes():
-  lista_primes = rela_primes()
-  lista_inver = []
-  for i in lista_primes:
-    for j in range(30):
-      if (i*j)%26 == 1:
-        lista_inver.append(j)
-        break
-  return lista_inver
-
- 
-## agregar ignorar lo que no sean letras y pasar las mayus a minus 
-
-#def unify(palabra):
-#  palabralist = []
-#  palabra = palabra.replace(" ", "")
-#  for i in range(len(palabra)):
-#    palabralist.append(palabra[i])
-#  return palabralist
-def unify(palabra):
-  palabralist = []
-  palabra = palabra.replace(" ", "")
-  palabra = palabra.lower()
-  regex = re.compile('[^a-z]')
-  palabra = regex.sub('', palabra)
-  print(palabra)
-  for i in range(len(palabra)):
-    palabralist.append(palabra[i])
-  return palabralist
-  
-
-  
-def convert (list):
-  lista = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-  count = 0
-  for i in list:
-    for j in range(len(lista)):
-      if i == lista[j]:
-        list[count]= j
-        continue
-
-    count = count + 1
-  return list
-
-  
-def deconvert(list):
-  lista = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-  string = ""
-  for i in range(len(list)):
-    list[i] = lista[int(list[i])]
-    string = string + list[i]
-  return string
-
+from Utilities import utilities
 
 
 #///////////////////////////////////////////////////////////////
@@ -76,25 +9,25 @@ def deconvert(list):
 #////////////////////////////////////////////////////////////////
 
 def encode_despla(palabrast):
-  palabrals = unify(palabrast)
+  palabrals = utilities.unify(palabrast)
   
   for count_falla in range(4):
     if count_falla > 2:
       clave = ran.randint(1,26)
       print("Al usar todos los intentos, hemos elegido una clave por usted. La clave sera: {}.".format(clave))
-      palabrals = convert(palabrals)
+      palabrals = utilities.convert(palabrals)
       for i in range(len(palabrals)):
         palabrals[i] = (palabrals[i] + clave)%26
-      palabrast = deconvert(palabrals)
+      palabrast = utilities.deconvert(palabrals)
       print(palabrast)
       return palabrast
     print("ingrese una clave entre 1 y 26. \n numero de intento: {}, tiene 3 intentos.".format(count_falla+1))
     clave = int(input())
     if 1 <= clave <= 26:
-        palabrals = convert(palabrals)
+        palabrals = utilities.convert(palabrals)
         for i in range(len(palabrals)):
           palabrals[i] = (palabrals[i] + clave)%26
-        palabrast = deconvert(palabrals)
+        palabrast = utilities.deconvert(palabrals)
         print(palabrast)
         return palabrast
     else:
@@ -103,25 +36,25 @@ def encode_despla(palabrast):
 
 def encode_mult(palabrast):
   
-  palabrals = unify(palabrast)
-  claves_validas = rela_primes()
+  palabrals = utilities.unify(palabrast)
+  claves_validas = utilities.rela_primes()
   for count_falla in range(4):
     if count_falla > 2:
       clave = claves_validas[ran.randint(1,len(claves_validas))]
       print("Al usar todos los intentos, hemos elegido una clave por usted. La clave sera: {}.".format(clave))
-      palabrals = convert(palabrals)
+      palabrals = utilities.convert(palabrals)
       for i in range(len(palabrals)):
         palabrals[i] = (palabrals[i] * clave)%26
-      palabrast = deconvert(palabrals)
+      palabrast = utilities.deconvert(palabrals)
       print(palabrast)
       return palabrast
     print("ingrese una clave que pertenezca a la lista {}. \nNumero de intento: {}, tiene 3 intentos.".format(claves_validas, count_falla+1))
     clave = int(input())
     if clave in claves_validas:
-        palabrals = convert(palabrals)
+        palabrals = utilities.convert(palabrals)
         for i in range(len(palabrals)):
           palabrals[i] = (palabrals[i] * clave)%26
-        palabrast = deconvert(palabrals)
+        palabrast = utilities.deconvert(palabrals)
         print(palabrast)
         return palabrast
     else:
@@ -131,7 +64,7 @@ def encode_mult(palabrast):
 def encode_sust(palabrast):
   dic = {'a':"", 'b':"", 'c':"", 'd':"", 'e':"", 'f':"", 'g':"", 'h':"", 'i':"", 'j':"", 'k':"", 'l':"",'m':"", 'n':"", 'o':"", 'p':"", 'q':"", 'r':"", 's':"", 't':"", 'u':"", 'v':"", 'w':"", 'x':"", 'y':"", 'z':""}
   lista = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-  palabrals = unify(palabrast)
+  palabrals = utilities.unify(palabrast)
   count_falla = 0
   count = 0
   flag = True
@@ -177,17 +110,17 @@ def encode_sust(palabrast):
 
 
 def encode_afin(palabrast):
-  palabrals = unify(palabrast)
-  claves_validas = rela_primes()
+  palabrals = utilities.unify(palabrast)
+  claves_validas = utilities.rela_primes()
   for count_falla in range(4):
     if count_falla > 2:
       a = claves_validas[ran.randint(1,len(claves_validas))]
       b = ran.randint(1,25)
       print("Al usar todos los intentos, hemos elegido una clave por usted. La clave sera: 'a' = {} y 'b' ={}.".format(a,b))
-      palabrals = convert(palabrals)
+      palabrals = utilities.convert(palabrals)
       for i in range(len(palabrals)):
         palabrals[i] = (((palabrals[i] * a)%26)+b)%26
-      palabrast = deconvert(palabrals)
+      palabrast = utilities.deconvert(palabrals)
       print(palabrast)
       return palabrast
     print("Ingrese 'a' y 'b' que seran la pareja que funcionara como clave.\n Elija 'a' que pertenezca a la lista {}.\n Elija 'b' que sea un numero entre 1 y 25. \nNumero de intento: {}, tiene 3 intentos.".format(claves_validas, count_falla+1))
@@ -197,10 +130,10 @@ def encode_afin(palabrast):
     b = int(input())
     if a in claves_validas:
       if 1 <= b <= 25:
-        palabrals = convert(palabrals)
+        palabrals = utilities.convert(palabrals)
         for i in range(len(palabrals)):
           palabrals[i] = (((palabrals[i] * a)%26)+b)%26
-        palabrast = deconvert(palabrals)
+        palabrast = utilities.deconvert(palabrals)
         print(palabrast)
         return palabrast
       else:
@@ -212,7 +145,7 @@ def encode_afin(palabrast):
 
 def encode_permu(string):
   
-  palabrals = unify(string)
+  palabrals = utilities.unify(string)
   
   while True:
     print("Ingrese el tamaño de los bloques a permutar, considere que este tamaño debe ser menor o igual al tamaño de la palabra a encriptar.")
@@ -240,8 +173,8 @@ def encode_permu(string):
       test.append(x[i])
     final.extend(test)
 
-  final = convert(final)
-  final = deconvert(final)
+  final = utilities.convert(final)
+  final = utilities.deconvert(final)
   print(final)
   return final
 #///////////////////////////////////////////////////////////////
@@ -255,21 +188,21 @@ def decode_despla(string):
     print("ingrese la clave, esta debe ser un numero entre 1 y 25.\n Tiene 3 intentos, este es el intento numero {}".format(count_fallas+1))
     key = int(input())
     if 1<= key<=26:
-      lista = unify(string)
-      lista = convert(lista)
+      lista = utilities.unify(string)
+      lista = utilities.convert(lista)
       for j in range(len(lista)):
         lista[j] = (lista[j]-key)%26
-      string = deconvert(lista)
+      string = utilities.deconvert(lista)
       print(string)
       return string
     count_fallas = count_fallas + 1
   print("Al usar los 3 intentos, la aproximacion sera por fuerza bruta, las posibilidades son las siguientes:")
   for i in range(25):
-    lista = unify(string)
-    lista = convert(lista)
+    lista = utilities.unify(string)
+    lista = utilities.convert(lista)
     for j in range(len(lista)):
       lista[j] = (lista[j]+1)%26
-    string = deconvert(lista)
+    string = utilities.deconvert(lista)
     print(string)
   return string
     
@@ -278,31 +211,31 @@ def decode_despla(string):
 ######### existe algo raro con el 11, arreglar
 ##qeaxgoxabaxxagngojgsgnoahg (21)
 def decode_mult(string):
-  inver_validas = inver_primes()
-  keys = rela_primes()
+  inver_validas = utilities.inver_primes()
+  keys = utilities.rela_primes()
   count_fallas = 0
   while count_fallas < 3:
     print("ingrese la clave, esta debe ser un numero que pertenece a la siguiente lista {}.\n Tiene 3 intentos, este es el intento numero {}".format(keys,count_fallas+1))
     key = int(input())
     if key in keys:
-      lista = unify(string)
-      lista = convert(lista)
+      lista = utilities.unify(string)
+      lista = utilities.convert(lista)
       for i in range(len(keys)):
         if keys[i] == key:
           key = inver_validas[i]
       for j in range(len(lista)):  
         lista[j] = int((lista[j]*key)%26)
-      string = deconvert(lista)
+      string = utilities.deconvert(lista)
       print(string)
       return string
     count_fallas = count_fallas + 1
   print("Al usar los 3 intentos, la aproximacion sera por fuerza bruta, las posibilidades son las siguientes:")
   for i in inver_validas:
-    lista = unify(string)
-    lista = convert(lista)
+    lista = utilities.unify(string)
+    lista = utilities.convert(lista)
     for j in range(len(lista)):
       lista[j] = int((lista[j]*i)%26)
-    res = deconvert(lista)
+    res = utilities.deconvert(lista)
     print(res)
   return res
 
@@ -315,9 +248,9 @@ def decode_mult(string):
 ##xuvijuogdobcmgu (5,20)
 def decode_afin(string):
   alf = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-  lista = unify(string)
-  claves_validas = rela_primes()
-  inversas_validas = inver_primes()
+  lista = utilities.unify(string)
+  claves_validas = utilities.rela_primes()
+  inversas_validas = utilities.inver_primes()
   print("tiene usted la clave? (Y/n)")
   res = input()
   if res == "Y":
@@ -332,10 +265,10 @@ def decode_afin(string):
       b = int(input())
       if a in claves_validas:
         if 1 <= b <= 25:
-          palabrals = convert(lista)
+          palabrals = utilities.convert(lista)
           for i in range(len(palabrals)):
             palabrals[i] = (((palabrals[i] - b)%26)*ai)%26
-          palabrast = deconvert(palabrals)
+          palabrast = utilities.deconvert(palabrals)
           print(palabrast)
           return palabrast
         else:
@@ -383,18 +316,18 @@ def decode_afin(string):
         for i in range(len(claves_validas)):
           if claves_validas[i] == abs(a):
             a = inversas_validas[i]
-        lista = unify(string)
+        lista = utilities.unify(string)
         ares = ((signoa*abs(a))*c)%26
         bres = (ei-(e * ares)%26)%26
         print("estos son a = {} y b = {}".format(ares,bres))
-        palabrals = convert(lista)
+        palabrals = utilities.convert(lista)
         for i in range(len(claves_validas)):
           if claves_validas[i] == abs(ares):
             ares = inversas_validas[i]
             break
         for i in range(len(palabrals)):
           palabrals[i] = ((palabrals[i] - bres)*ares)%26
-        palabrast = deconvert(palabrals)
+        palabrast = utilities.deconvert(palabrals)
         print(palabrast)
         return palabrast
 
@@ -413,13 +346,13 @@ def permufiesta(palabra,m,l):
         break
     final.extend(test)
   
-  final = convert(final)
-  final = deconvert(final)
+  final = utilities.convert(final)
+  final = utilities.deconvert(final)
   print(final)
   return final
   
 def decode_permu(string):
-  palabra = unify(string)
+  palabra = utilities.unify(string)
   print("Tiene usted el tamaño de los bloques? (Y/n)")
   res = input()
   
