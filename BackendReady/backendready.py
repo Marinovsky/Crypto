@@ -90,6 +90,16 @@ def deconvert(list):
 
 ####LIMPIO
 def encode_despla(palabrast,key,count_falla):
+  """
+This codification method receives a message, and a key
+From the message we remove all non alphabetical characters, remove spaces, and lower all characters that remain.
+The key is required to be between 1 and 25.
+If the user fails 3 times providing a valid key, the program chooses randomly a valid key and encrypts the message using it.
+Understanding a<->0, b<->1, ..., z<->25 we transform each letter to its corresponding numerical value.
+The codification method adds the key value to each number and transforms the result back to an alphabetical value.
+Then returns the message encrypted
+  """
+
   palabrals = unify(palabrast)
   if count_falla > 2:
     key = ran.randint(1,26)
@@ -112,6 +122,16 @@ def encode_despla(palabrast,key,count_falla):
 
 ####LIMPIO
 def encode_mult(palabrast,key,count_falla):
+  """
+This codification method receives a message, and a key
+From the message we remove all non alphabetical characters, remove spaces, and lower all characters that remain.
+The key is required to be in the list of relative prime numbers with 26.
+If the user fails 3 times providing a valid key, the program chooses randomly a valid key and encrypts the message using it.
+Understanding a<->0, b<->1, ..., z<->25 we transform each letter to its corresponding numerical value.
+The codification method adds the key value to each number and transforms the result back to an alphabetical value.
+Then returns the message encrypted
+  """
+
   palabrals = unify(palabrast)
   claves_validas = rela_primes()
   if count_falla > 2:
@@ -130,9 +150,17 @@ def encode_mult(palabrast,key,count_falla):
   else:
     return -1
 
-###### toca pensarlo mucho mejor, la idea es que la codificacion entre
-###### completa, las 26 keys.
+###### LIMPIO
 def encode_sust(palabrast,key,count_falla):
+  """
+This codification method receives a message, and a key
+From the message we remove all non alphabetical characters, remove spaces, and lower all characters that remain.
+The key is a list of letters that, in order, replace one of the characters in the message. non alphabet characters and duplicates are not allowed
+If the user fails 3 times providing a valid key, the program chooses randomly a valid key and encrypts the message using it.
+The codification method substitutes each letter by its replacement as stated in the key.
+Then returns the message encrypted
+  """
+
   dic = {'a':"", 'b':"", 'c':"", 'd':"", 'e':"", 'f':"", 'g':"", 'h':"", 'i':"", 'j':"", 'k':"", 'l':"",'m':"", 'n':"", 'o':"", 'p':"", 'q':"", 'r':"", 's':"", 't':"", 'u':"", 'v':"", 'w':"", 'x':"", 'y':"", 'z':""}
   lista = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
   palabrals = unify(palabrast)
@@ -161,6 +189,15 @@ def encode_sust(palabrast,key,count_falla):
 
 ####LIMPIO
 def encode_afin(palabrast, a, b, count_falla):
+  """
+This codification method receives a message, and a key
+From the message we remove all non alphabetical characters, remove spaces, and lower all characters that remain. 
+The key is composed by a and b, for a it needs to be in the list of relative primes of 26 and b requires to be between 1 and 25.
+If the user fails 3 times providing a valid key, the program chooses randomly a valid key and encrypts the message using it.
+Understanding a<->0, b<->1, ..., z<->25 we transform each letter to its corresponding numerical value.
+The codification method multiplies a and ads b to each number and transforms the result back to an alphabetical value.
+Then returns the message encrypted
+  """
   palabrals = unify(palabrast)
   claves_validas = rela_primes()
   if count_falla > 2:
@@ -185,6 +222,14 @@ def encode_afin(palabrast, a, b, count_falla):
 
 ####LIMPIO
 def encode_permu(string, tama, key, count_falla):
+  """
+This codification method receives a message, and a key
+From the message we remove all non alphabetical characters, remove spaces, and lower all characters that remain. 
+The key is composed by a and b, a needs to bea positive number lower than the length of the processed text, b requires to be between 1 and a.
+If the user fails 3 times providing a valid key, the program chooses randomly a valid key and encrypts the message using it.
+The codification method takes chunks of size a and moves each letter b spaces to the right, if the letter is in the last position of the chunk, it goes back to the first.
+Then returns the message encrypted
+  """
   palabrals = unify(string)
   while True:
     if 1 <= tama <=len(palabrals):
@@ -287,7 +332,6 @@ def decode_sust(palabrast,key,count_falla):
   return string
   
   
-#####  PENSAR MEJOR COMO GENERAR ESTO EN UNA SOLA
 ## la vida es hermosa
 ##tulypuwqrwjaoqu (7,20)
 ##xuvijuogdobcmgu (5,20)
@@ -378,7 +422,6 @@ def decode_afin(string):
 
 
 #### LIMPIO
-#Este metodo es para no tener que escribir lo mismo dos veces en decode_permu
 def permufiesta(palabra,m,l):
   chunks = [palabra[x:x+m] for x in range(0, len(palabra), m)]
   final=[]
@@ -410,42 +453,3 @@ def decode_permu(string, tama, key, count_falla):
       return -1
   else:
     return -1
-    
-#////////////////////////////////////////////////////////////////
-#//////////////////////CUERPO PRINCIPAL///////////////////
-#////////////////////////////////////////////////////////////////
-
-    
-print("elija entre las siguietnes opciones:\nEncriptar: 1 \nDesencriptar: 2")
-opcion = int(input())
-if opcion == 1:
-  while True:
-    print("cual es la palabra que desea encriptar? (al menos un caracter, todo en minuscula")
-    palabra = input()
-    if len(palabra) > 1:
-      break
-  print("Cual metodo de encriptacion desea?\nDesplazamiento: 1\nMultiplicacion: 2\nSustitucion: 3\nAfin: 4\nPermutación: 5")
-  opcion = int(input())
-  if opcion == 1:
-    encode_despla(palabra)
-  elif opcion == 2:
-    encode_mult(palabra)
-  elif opcion == 3:
-    encode_sust(palabra)
-  elif opcion == 4:
-    encode_afin(palabra)
-  else:
-    encode_permu(palabra)
-else:
-  print("cual es la palabra que desea desencriptar?")
-  palabra = input()
-  print("cual cree que fue el metodo de encriptacion?\nDesplazamiento: 1\nMultiplicacion: 2\nAfin: 3\nPermutación: 4")
-  opcion = int(input())
-  if opcion == 1:
-    decode_despla(palabra)
-  elif opcion == 2:
-    decode_mult(palabra)
-  elif opcion == 3:
-    decode_afin(palabra)
-  else:
-    decode_permu(palabra)
