@@ -106,14 +106,12 @@ Then returns the message encrypted
     for i in range(len(palabrals)):
       palabrals[i] = (palabrals[i] + key)%26
     palabrast = deconvert(palabrals)
-    print(palabrast)
     return palabrast, key
   if 1 <= key <= 26:
       palabrals = convert(palabrals)
       for i in range(len(palabrals)):
         palabrals[i] = (palabrals[i] + key)%26
       palabrast = deconvert(palabrals)
-      print(palabrast)
       return palabrast, key
   else:
     return -1, -1
@@ -227,7 +225,7 @@ def encode_permu(string, tama, key, count_falla):
   """
 This codification method receives a message, and a key
 From the message we remove all non alphabetical characters, remove spaces, and lower all characters that remain.
-The key is composed by a and b, a needs to bea positive number lower than the length of the processed text, b requires to be between 1 and a.
+The key is composed by a and b, a needs to be a positive number lower than the length of the processed text, b requires to be between 1 and a.
 If the user fails 3 times providing a valid key, the program chooses randomly a valid key and encrypts the message using it.
 The codification method takes chunks of size a and moves each letter b spaces to the right, if the letter is in the last position of the chunk, it goes back to the first.
 Then returns the message encrypted
@@ -344,91 +342,75 @@ def decode_sust(palabrast,key,count_falla):
 ## la vida es hermosa
 ##tulypuwqrwjaoqu (7,20)
 ##xuvijuogdobcmgu (5,20)
-def decode_afin(string):
-  alf = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+def decode_afin(string, a, b, count_fallas):
   lista = unify(string)
   claves_validas = rela_primes()
   inversas_validas = inver_primes()
-  print("tiene usted la clave? (Y/n)")
-  res = input()
-  if res == "Y":
-    flag = True
-    while flag == True:
-      print("ingrese 'a': ")
-      a = int(input())
-      for i in range(len(claves_validas)):
-        if claves_validas[i] == a:
-          ai = inversas_validas[i]
-      print("ingrese 'b': ")
-      b = int(input())
-      if a in claves_validas:
-        if 1 <= b <= 25:
-          palabrals = convert(lista)
-          for i in range(len(palabrals)):
-            palabrals[i] = (((palabrals[i] - b)%26)*ai)%26
-          palabrast = deconvert(palabrals)
-          print(palabrast)
-          return palabrast
-        else:
-          print("ingrese nuevamente la clave")
-      else:
-        print("ingrese nuevamente la clave")
-    
+  if a in claves_validas:
+    for i in range(len(claves_validas)):
+      if claves_validas[i] == a:
+        ai = inversas_validas[i]
+    if 1 <= b <= 25:
+      palabrals = convert(lista)
+      for i in range(len(palabrals)):
+        palabrals[i] = (((palabrals[i] - b)%26)*ai)%26
+      palabrast = deconvert(palabrals)
+      print(palabrast)
+      return palabrast, a, b
+    else:
+      return -1,-1,-1
   else:
-    dic={}
-    for item in lista:
-      if item not in dic.keys():
-        dic[item] = 1
-      else:
-        dic[item] = dic[item]+1
-    dic = dict(sorted(dic.items(), key=lambda item: item[1], reverse = True))
-    print("Se ha realizado el siguiente conteo, basado en esto, como desea mapear?")
-    print(dic)
-    flag = True
-    while flag == True:
-      print("Como primera letra, cual letra desea mapear. (sugerimos las letras con mayor frecuencias en el alfabeto ingles 'e','t','a','o','n')")
-      e = input()
-      print("Cual letra cree que mapea a '{}'?".format(e))
-      ei = input()
-      print("Como segunda letra, cual letra desea mapear. (sugerimos las letras con mayor frecuencias en el alfabeto ingles 'e','t','a','o','n')")
-      t = input()
-      print("Cual letra cree que mapea a '{}'?".format(t))
-      ti = input()
-      for i in range(len(alf)):
-        if alf[i] == e:
-          e = i
-        if alf[i] == ei:
-          ei = i 
-        if alf[i] == t:
-          t = i
-        if alf[i] == ti:
-          ti = i
-      a = e - t
-      c = ei - ti
-      signoa = a/abs(a)
-      signoc = c/abs(c)
-      print(e,ei,t,ti,a,c,signoa,signoc)
-      if abs(a) not in claves_validas:
-        print("intentelo nuevamente")
-      else:
-        for i in range(len(claves_validas)):
-          if claves_validas[i] == abs(a):
-            a = inversas_validas[i]
-        lista = unify(string)
-        ares = ((signoa*abs(a))*c)%26
-        bres = (ei-(e * ares)%26)%26
-        print("estos son a = {} y b = {}".format(ares,bres))
-        palabrals = convert(lista)
-        for i in range(len(claves_validas)):
-          if claves_validas[i] == abs(ares):
-            ares = inversas_validas[i]
-            break
-        for i in range(len(palabrals)):
-          palabrals[i] = ((palabrals[i] - bres)*ares)%26
-        palabrast = deconvert(palabrals)
-        print(palabrast)
-        return palabrast
+    return -1,-1,-1
 
+def analisis_afin(string):
+  alf = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+  dic={}
+  lista = unify(string)
+  claves_validas = rela_primes()
+  inversas_validas = inver_primes()
+  for item in lista:
+    if item not in dic.keys():
+      dic[item] = 1
+    else:
+      dic[item] = dic[item]+1
+  dic = dict(sorted(dic.items(), key=lambda item: item[1], reverse = True))
+  dict_items = dic.items()
+
+  first_two = list(dict_items)[:2]
+  e= "e"
+  ei = first_two[0][0]
+  t = "t"
+  ti = first_two[1][0]
+  print("Se ha realizado el siguiente conteo, basado en esto, como desea mapear?")
+  print(dic)
+  for i in range(len(alf)):
+    if alf[i] == e:
+      e = i
+    if alf[i] == ei:
+      ei = i 
+    if alf[i] == t:
+      t = i
+    if alf[i] == ti:
+      ti = i
+  a = e - t
+  c = ei - ti
+  signoa = a/abs(a)
+  signoc = c/abs(c)
+  if abs(a) not in claves_validas:
+    return -1,-1,-1
+  else:
+    for i in range(len(claves_validas)):
+      if claves_validas[i] == abs(a):
+        a = inversas_validas[i]
+    lista = unify(string)
+    ares = ((signoa*abs(a))*c)%26
+    bres = (ei-(e * ares)%26)%26
+    for i in range(len(claves_validas)):
+      if claves_validas[i] == abs(ares):
+        ares = inversas_validas[i]
+        break
+    bres = int(bres)
+    return string, ares, bres
 
 #### LIMPIO
 def permufiesta(palabra,m,l):
