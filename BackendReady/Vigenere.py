@@ -96,9 +96,3 @@ def Decrypt(keyword, text):
         decryptedText += utils.GetLetter((utils.GetCode(text[i]) - (key[i % m])) % 26)
 
     return decryptedText
-
-"""
-EXAMPLE
-print(Encrypt("CIPHER", "This Cryptosystem is not secure", 0))
-print(Decrypt("CIPHER", "vpxzgiaxivwpubttmjpwizitwzt"))
-"""

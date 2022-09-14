@@ -5,16 +5,18 @@ from IPython.display import display
 import urllib.request
 import numpy as np
 from Utils import utils
-from CryptoanalysisHill import ComputeInverseKey
 
-def EncryptImage(key, url):
+def EncryptImage(key, url, failures):
     """
     Description
     -----------
     Given m(the dimension of the key matrix), the key(matrix) and a
     url of the image, it encrypts the image of the url using the key.
     Finally, the encrypted image is displayed and then saved in
-    'result.pgm' file
+    'result.pgm' file. 
+    
+    If the key is not valid after three times, it
+    uses a valid random key generated.
 
     Parameters
     ----------
@@ -22,14 +24,21 @@ def EncryptImage(key, url):
         The mxm matrix to use as a key in the Hill cipher
     url : string
         The url of the image to encrypt
+    failures : int
+        Number of times the user has entered an invalid key
+    
+    Returns
+    -------
+    2-dimensional list : The key used to encrypt the image
     """
-
-    try:
-        utils.IsValidMatrix(key)
-    except:
-        return -1
-
     m = len(key)
+    if failures == 3:
+        key = utils.GetRandomInvertibleMatrix(256, m)
+    elif utils.IsValidMatrix(key):
+        return -1
+    elif utils.ComputeInverseKey(256, key) == -1:
+        return -1
+    
     response = requests.get(url)
     urllib.request.urlretrieve(url,"image.jpg")
     img = Image.open("image.jpg")
@@ -50,7 +59,7 @@ def EncryptImage(key, url):
                 # Transform the m pixels making the dot product between them and the
                 # key matrix
                 newRowPixels = list(np.dot(rowPixels, key))
-                newRowPixels = [(i % 255) for i in newRowPixels]
+                newRowPixels = [(i % 256) for i in newRowPixels]
                 for i in range(x - m, x):
                     encryptedImg.putpixel((i,y), int(newRowPixels[i - (x-m)]))
                 rowPixels = []
@@ -58,29 +67,28 @@ def EncryptImage(key, url):
             rowPixels.append(encryptedImg.getpixel((x,y)))
     
     # Show the image and save it in a .pgm file
-    encryptedImg.show()
+    #encryptedImg.show()
     encryptedImg.save("result.pgm")
+    return key
 
 def DecryptImage(decryptKey, imgPath):
     """
     Description
     -----------
     Given m(the dimension of the key matrix), the  decrypt key(the 
-    inverse modulus 255 of the matrix used to encrypt) and the path
+    inverse modulus 256 of the matrix used to encrypt) and the path
     of the image it decrypts the image in the path using the key
     and then displays it
 
     Parameters
     ----------
     decryptKey : 2-dimensional list or np.array
-        The inverse modulus 255 of the matrix used to encrypt
+        The inverse modulus 256 of the matrix used to encrypt
     imgPath : string
         The path of the image to decrypt in the local host
     """
 
-    try:
-        utils.IsValidMatrix(decryptKey)
-    except:
+    if utils.IsValidMatrix(decryptKey) == -1:
         return -1
 
     m = len(decryptKey)
@@ -96,9 +104,9 @@ def DecryptImage(decryptKey, imgPath):
                 # Transform the m pixels making the dot product between them and the
                 # key matrix
                 newRowPixels = list(np.dot(rowPixels, decryptKey))
-                newRowPixels = [(int(i) % 255) for i in newRowPixels]
+                newRowPixels = [(int(i) % 256) for i in newRowPixels]
                 for i in range(x - m, x):
-                    decryptedImg.putpixel((i,y), int(newRowPixels[i - (x-m)]) % 255)
+                    decryptedImg.putpixel((i,y), int(newRowPixels[i - (x-m)]) % 256)
                 rowPixels = []
             
             rowPixels.append(decryptedImg.getpixel((x,y)))
@@ -106,13 +114,16 @@ def DecryptImage(decryptKey, imgPath):
     #decryptedImg.show()
     decryptedImg.save("out.png")
 
-def EncryptText(key, text):
+def EncryptText(key, text, failures):
     """
     Description
     -----------
     Given m(the dimension of the key matrix), the key(matrix)
     and the text, it encrypts the text using the key and then
-    returns it
+    returns it.
+
+    If the user enters an invalid key three times, the function
+    use a valid random key generated
 
     Parameters
     ----------
@@ -121,14 +132,23 @@ def EncryptText(key, text):
     text : string
         The text to encrypt. If the text length is not a m multiple
         it will add 'f' characters as needed to make it a m multiple
+    failures : int
+        The number of times the user has entered an invalid key
+    
+    Returns
+    -------
+    string : Encrypted text
+    2-dimensional list : The key used to encrypt the text
     """
-
-    try:
-        utils.IsValidMatrix(key)
-    except:
-        return -1
-
     m = len(key)
+
+    if failures == 3:
+        key = utils.GetRandomInvertibleMatrix(26, m)
+    elif utils.IsValidMatrix(key):
+        return -1
+    elif utils.ComputeInverseKey(26, key) == -1:
+        return -1
+    
     text = utils.preProcessText(text)
     encryptedText = ""
 
@@ -155,7 +175,7 @@ def EncryptText(key, text):
             rowCharacters.append(utils.GetCode(text[x]))
     
     # Return the encrypted text
-    return encryptedText
+    return encryptedText, key
 
 def DecryptText(decryptKey, text):
     """
@@ -199,39 +219,3 @@ def DecryptText(decryptKey, text):
     
     # Return the encrypted text
     return decryptedText
-
-"""
-# Example 1
-m = 3
-n = 255
-key = [[10,4,12],[3,14,4],[8,9,0]]
-inverseKey = ComputeInverseKey(n, key)
-
-EncryptImage(key, "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/600px-Cat03.jpg")
-DecryptImage(inverseKey, "result.pgm")
-
-
-# Example 2
-m = 2
-n = 26
-key = [[11, 8], [3, 7]]
-inverseKey = ComputeInverseKey(n, key)
-text = "july"
-
-encryptedText = EncryptText(key, text)
-print(encryptedText)
-decryptedText = DecryptText(inverseKey, encryptedText)
-print(decryptedText)
-
-#Good cases
-https://i.scdn.co/image/ab6765630000ba8a8c04c65ceb701d64f8966e23
-https://upload.wikimedia.org/wikipedia/commons/5/54/Panda_Cub_%284274178112%29.jpg
-https://i.pinimg.com/originals/6f/0b/3b/6f0b3baa01e2136b2e2d93709e622e2c.jpg
-
-# Middle cases
-https://scontent.fbog4-1.fna.fbcdn.net/v/t39.30808-6/306102097_2868887480087696_8956594249965335582_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=a26aad&_nc_eui2=AeGwbIyz9fkoiaa7UKkdjKuFzzjx7ZARUSDPOPHtkBFRIMjQ5a58SSjb4-09hGz_5J4CPJ6JonpeOnxi29pbS88D&_nc_ohc=KbG5TT4GuY0AX859emw&_nc_ht=scontent.fbog4-1.fna&oh=00_AT9bTvkoUh5aRrphZRFsOt7Qu-bPy-f_uhJc3-e88uWETw&oe=6323986B
-
-# Bad cases
-https://upload.wikimedia.org/wikipedia/commons/5/56/Tux.jpg
-https://www3.gobiernodecanarias.org/medusa/ecoescuela/sa/files/formidable/6/mondrian-1504681_960_720.png
-"""
